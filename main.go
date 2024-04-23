@@ -16,7 +16,7 @@ func main() {
 	randomNumberFetcher := func() int { return rand.Intn(500000000) }
 	streamGenerator := generators.RepeatFunc(done, randomNumberFetcher)
 
-	// DIVIDE SEARCH FOR PRIMES
+	// DIVIDE SEARCH FOR PRIMESSSS
 	cpuCount := runtime.NumCPU()
 	primesStreamChannels := make([]<-chan int, cpuCount)
 	for i := 0; i < cpuCount; i++ {

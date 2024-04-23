@@ -4,26 +4,6 @@ import (
 	"sync"
 )
 
-func PrimeFinder(done <-chan int, intStream <-chan int) <-chan int {
-	primeStream := make(chan int)
-
-	go func() {
-		defer close(primeStream)
-		for {
-			select {
-			case <-done:
-				return
-			case number := <-intStream:
-				if IsPrime(number) {
-					primeStream <- number
-				}
-			}
-		}
-	}()
-
-	return primeStream
-}
-
 func FanIn[T any](done <-chan int, channels ...<-chan T) <-chan T {
 	var wg = sync.WaitGroup{}
 	fannedInStream := make(chan T)
@@ -52,6 +32,26 @@ func FanIn[T any](done <-chan int, channels ...<-chan T) <-chan T {
 	return fannedInStream
 }
 
+func PrimeFinder(done <-chan int, intStream <-chan int) <-chan int {
+	primeStream := make(chan int)
+
+	go func() {
+		defer close(primeStream)
+		for {
+			select {
+			case <-done:
+				return
+			case number := <-intStream:
+				if IsPrime(number) {
+					primeStream <- number
+				}
+			}
+		}
+	}()
+
+	return primeStream
+}
+
 func TakeSome[T any, K any](done <-chan K, stream <-chan T, number int) <-chan T {
 	itemsTaken := make(chan T)
 
@@ -69,9 +69,9 @@ func TakeSome[T any, K any](done <-chan K, stream <-chan T, number int) <-chan T
 	return itemsTaken
 }
 
-func IsPrime(number int) bool {
-	for i := number - 1; i > 1; i-- {
-		if number%i == 0 {
+func IsPrime(numero int) bool {
+	for i := numero - 1; i > 1; i-- {
+		if numero%i == 0 {
 			return false
 		}
 	}
